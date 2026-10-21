@@ -1,16 +1,18 @@
 import dns from "node:dns";
 
+
 dns.setServers(["8.8.8.8"]);
 
 // require('dotenv').config({path:'./env'})
 
 import dotenv from "dotenv"
 import connectDB from "./db/index.js";
+import app from "./app.js";
 import { getHashes, hash } from "node:crypto";
 import { hasUncaughtExceptionCaptureCallback } from "node:process";
 
 dotenv.config({
-    path: "./env"
+    path: "./.env"
 })
 
 connectDB()

@@ -1,0 +1,142 @@
+# Comprehensive Study Notes: HTTP & Web Fundamentals
+
+---
+
+## 1. Overview & Core Philosophy
+
+* **Context:** Understanding HTTP is fundamental for both backend and frontend software engineers. It forms the backbone of web development, API design, and client-server communication.
+* **Core Philosophy:** Mastery of HTTP requires looking beyond surface-level definitions. Understanding how **networking protocols, operating systems, data structures, and security layers** interact is what differentiates average developers from top-tier engineers.
+
+---
+
+## 2. HTTP vs. HTTPS
+
+* **HTTP (HyperText Transfer Protocol):**
+* Transfers data in **clear text** (unencrypted) between client and server.
+* *Example:* Transmitting `"ABC"` sends raw `"ABC"` across network packets, making it vulnerable to interception (e.g., Man-in-the-Middle attacks).
+
+
+* **HTTPS (HTTP Secure):**
+* Encrypts the payload during transit using **TLS/SSL encryption**.
+* The data remains unreadable over public networks and can only be decrypted at the designated destination (client or server).
+
+
+* **Industry Usage:** In research papers, technical specs, and software engineering discussions, professionals often use the term **"HTTP"** generically to refer to the web communication protocol, regardless of whether TLS encryption (HTTPS) is active under the hood.
+
+---
+
+## 3. Client-Server Architecture & Resource Identification
+
+### Client-Server Model
+
+Communication relies on a request-response cycle:
+
+* **Client (Requester):** Mobile apps, web browsers, or API clients (Postman, cURL).
+* **Server (Responder):** Backend infrastructure processing requests and serving resources or responses.
+
+### Identifying Resources
+
+* **URL (Uniform Resource Locator):** Specifies the explicit network location/address where a resource lives (e.g., `[https://api.example.com/v1/users](https://api.example.com/v1/users)`).
+* **URI (Uniform Resource Identifier):** The overarching standard that uniquely identifies a resource. A URL is a specific type of URI.
+* **URN (Uniform Resource Name):** Identifies a resource by name in a given namespace, without specifying its location (e.g., `urn:isbn:0451450523`).
+
+---
+
+## 4. HTTP Headers (Metadata)
+
+Headers are sent alongside requests and responses as **key-value pairs** (e.g., `Content-Type: application/json`). They provide crucial contextual metadata regarding the payload and sender.
+
+### Key Applications of Headers
+
+* **Caching:** Efficiently determining whether content has changed or can be fetched locally.
+* **Authentication:** Safely passing auth tokens and managing user access control.
+* **State Management:** Tracking session state (guest vs. authenticated user, active shopping carts, etc.).
+
+### Critical HTTP Headers
+
+| Header | Description | Example / Usage |
+| --- | --- | --- |
+| **`Accept`** | Declares the response format expected by the client. | `application/json` |
+| **`Content-Type`** | Specifies the media type of the sent payload. | `application/json`, `image/png` |
+| **`Authorization`** | Delivers identity verification credentials. | `Bearer <JWT_TOKEN>` |
+| **`User-Agent`** | Identifies client app, browser engine, and OS details. | Used for client targeting/analytics. |
+| **`Cookie`** | Stores and sends small pieces of data for session tracking. | Session key management. |
+| **`Cache-Control`** | Directs caching policies across clients, proxies, and CDNs. | `max-age=3600`, `no-cache` |
+
+> 📌 **Historical Note (`X-` Prefix):** Custom headers previously required an `X-` prefix (e.g., `X-Custom-Header`). While deprecated since RFC 6648, they still appear in legacy codebases.
+
+---
+
+## 5. HTTP Methods (Verbs)
+
+HTTP methods define the nature of the action requested by the client on a resource.
+
+### Most Common Methods
+
+* **`GET`:** **Retrieve** data from the server without modifying resource state (idempotent & read-only).
+* **`POST`:** **Create** a new resource on the server (e.g., registering a user, creating an order).
+* **`PUT`:** **Replace** an entire existing resource with updated payload data.
+* **`PATCH`:** Perform **partial updates** on an existing resource (modifying specific attributes).
+* **`DELETE`:** **Remove** a target resource from the server.
+
+### Advanced & Utility Methods
+
+* **`HEAD`:** Same as `GET`, but requests **headers only** without the response body (useful for checking file size or pre-fetching metadata).
+* **`OPTIONS`:** Discovers supported HTTP methods and policies for a target endpoint (commonly used in CORS preflight checks).
+* **`TRACE`:** Performs a message loop-back test along the network path for proxy debugging.
+
+---
+
+## 6. HTTP Status Codes
+
+Status codes are standardized 3-digit integers returned by the server indicating the outcome of an HTTP request.
+
+```
+       ┌── 1xx: Informational
+       ├── 2xx: Success
+Status ┼── 3xx: Redirection
+Codes  ├── 4xx: Client Errors
+       └── 5xx: Server Errors
+
+```
+
+### Breakdown by Category
+
+#### `1xx` Informational
+
+Indicates receipt of request and ongoing processing.
+
+* **`100 Continue`:** Server received request headers; client should proceed to send payload.
+* **`102 Processing`:** Request received; server is executing time-consuming background operations.
+
+#### `2xx` Success
+
+Confirms the requested operation succeeded.
+
+* **`200 OK`:** Standard successful request response.
+* **`201 Created`:** Resource was successfully created (commonly returned after `POST`).
+* **`202 Accepted`:** Request accepted for execution, but processing is not yet complete.
+
+#### `3xx` Redirection
+
+Indicates further action or URL redirection is required.
+
+* **`301 Moved Permanently`:** Resource location updated permanently.
+* **`307 / 308 Temporary / Permanent Redirect`:** Redirects requests while preserving the original HTTP method.
+
+#### `4xx` Client Error
+
+Indicates invalid or unauthorized requests originating from the client.
+
+* **`400 Bad Request`:** Invalid payload, malformed syntax, or missing fields.
+* **`401 Unauthorized`:** Authentication credentials missing or invalid.
+* **`402 Payment Required`:** Reserved for digital payment flows or rate/quota limits.
+* **`404 Not Found`:** Requested resource or endpoint does not exist.
+
+#### `5xx` Server Error
+
+Indicates failures originating on the server side despite a valid client request.
+
+* **`500 Internal Server Error`:** Generic unhandled server error or application crash.
+* **`504 Gateway Timeout`:** Upstream server failed to respond in time.
+
